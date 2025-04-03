@@ -3,6 +3,7 @@ import { MailService } from './mail.service';
 import { MailController } from './mail.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -21,6 +22,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         },
         defaults: {
           from: configService.get<string>('MAIL_SENDER'),
+        },
+        template: {
+          dir: __dirname + '/templates',
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+        options: {
+          partials: {
+            dir: __dirname + '/templates',
+            Options: {
+              strict: true,
+            },
+          },
         },
       }),
     }),
