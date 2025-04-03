@@ -24,7 +24,10 @@
     "@nestjs/swagger": "^11.1.0",
     "@repo/api": "workspace:*",
     "cache-manager": "^6.4.1",
+    "ejs": "^3.1.10",
+    "handlebars": "^4.7.8",
     "nodemailer": "^6.10.0",
+    "pug": "^3.0.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
