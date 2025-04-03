@@ -50,18 +50,12 @@ importers:
       cache-manager:
         specifier: ^6.4.1
         version: 6.4.1
-      ejs:
-        specifier: ^3.1.10
-        version: 3.1.10
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
       nodemailer:
         specifier: ^6.10.0
         version: 6.10.0
-      pug:
-        specifier: ^3.0.3
-        version: 3.0.3
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -2987,6 +2981,7 @@ packages:
     hasBin: true
     requiresBuild: true
     dev: false
+    optional: true
 
   /acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
@@ -3275,6 +3270,7 @@ packages:
     resolution: {integrity: sha512-5oJg84os6NMQNl27T9LnZkvvqzvAnHu03ShCnoj6bsJwS7L8AO4lf+C/XjK/nvzEqQB744moC6V128RucQd1jA==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /ast-types-flow@0.0.8:
     resolution: {integrity: sha512-OH/2E5Fg20h2aPrbe+QL8JZQFko0YZaF+j4mnQ7BGhfavO7OpSLa8a0y9sBwomHdSbkhTS8TQNayBfnW5DwbvQ==}
@@ -3399,6 +3395,7 @@ packages:
     dependencies:
       '@babel/types': 7.27.0
     dev: false
+    optional: true
 
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -3636,6 +3633,7 @@ packages:
     dependencies:
       is-regex: 1.2.1
     dev: false
+    optional: true
 
   /chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
@@ -3871,6 +3869,7 @@ packages:
       '@babel/parser': 7.27.0
       '@babel/types': 7.27.0
     dev: false
+    optional: true
 
   /content-disposition@0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
@@ -4259,6 +4258,7 @@ packages:
     resolution: {integrity: sha512-LLBi6pEqS6Do3EKQ3J0NqHWV5hhb78Pi8vvESYwyOy2c31ZEZVdtitdzsQsKb7878PEERhzUk0ftqGhG6Mz+pQ==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
@@ -6158,6 +6158,7 @@ packages:
       acorn: 7.4.1
       object-assign: 4.1.1
     dev: false
+    optional: true
 
   /is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
@@ -6246,6 +6247,7 @@ packages:
     resolution: {integrity: sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /is-regex@1.2.1:
     resolution: {integrity: sha512-MjYsKHO5O7mCsmRGxWcLWheFqN9DJ/2TmngvjKXihe6efViPqc274+Fx/4fYj/r03+ESvBdTXK0V6tA3rgez1g==}
@@ -6974,6 +6976,7 @@ packages:
     resolution: {integrity: sha512-rtS5ATOo2Q5k1G+DADISilDA6lv79zIiwFd6CcjuIxGKLFm5C+RLImRscVap9k55i+MOZwgliw+NejvkLuGD5g==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -7102,6 +7105,7 @@ packages:
       is-promise: 2.2.2
       promise: 7.3.1
     dev: false
+    optional: true
 
   /jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
@@ -8633,6 +8637,7 @@ packages:
     dependencies:
       asap: 2.0.6
     dev: false
+    optional: true
 
   /prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
@@ -8697,6 +8702,7 @@ packages:
       js-stringify: 1.0.2
       pug-runtime: 3.0.1
     dev: false
+    optional: true
 
   /pug-code-gen@3.0.3:
     resolution: {integrity: sha512-cYQg0JW0w32Ux+XTeZnBEeuWrAY7/HNE6TWnhiHGnnRYlCgyAUPoyh9KzCMa9WhcJlJ1AtQqpEYHc+vbCzA+Aw==}
@@ -8711,11 +8717,13 @@ packages:
       void-elements: 3.1.0
       with: 7.0.2
     dev: false
+    optional: true
 
   /pug-error@2.1.0:
     resolution: {integrity: sha512-lv7sU9e5Jk8IeUheHata6/UThZ7RK2jnaaNztxfPYUY+VxZyk/ePVaNZ/vwmH8WqGvDz3LrNYt/+gA55NDg6Pg==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /pug-filters@4.0.0:
     resolution: {integrity: sha512-yeNFtq5Yxmfz0f9z2rMXGw/8/4i1cCFecw/Q7+D0V2DdtII5UvqE12VaZ2AY7ri6o5RNXiweGH79OCq+2RQU4A==}
@@ -8727,6 +8735,7 @@ packages:
       pug-walk: 2.0.0
       resolve: 1.22.10
     dev: false
+    optional: true
 
   /pug-lexer@5.0.1:
     resolution: {integrity: sha512-0I6C62+keXlZPZkOJeVam9aBLVP2EnbeDw3An+k0/QlqdwH6rv8284nko14Na7c0TtqtogfWXcRoFE4O4Ff20w==}
@@ -8736,6 +8745,7 @@ packages:
       is-expression: 4.0.0
       pug-error: 2.1.0
     dev: false
+    optional: true
 
   /pug-linker@4.0.0:
     resolution: {integrity: sha512-gjD1yzp0yxbQqnzBAdlhbgoJL5qIFJw78juN1NpTLt/mfPJ5VgC4BvkoD3G23qKzJtIIXBbcCt6FioLSFLOHdw==}
@@ -8744,6 +8754,7 @@ packages:
       pug-error: 2.1.0
       pug-walk: 2.0.0
     dev: false
+    optional: true
 
   /pug-load@3.0.0:
     resolution: {integrity: sha512-OCjTEnhLWZBvS4zni/WUMjH2YSUosnsmjGBB1An7CsKQarYSWQ0GCVyd4eQPMFJqZ8w9xgs01QdiZXKVjk92EQ==}
@@ -8752,6 +8763,7 @@ packages:
       object-assign: 4.1.1
       pug-walk: 2.0.0
     dev: false
+    optional: true
 
   /pug-parser@6.0.0:
     resolution: {integrity: sha512-ukiYM/9cH6Cml+AOl5kETtM9NR3WulyVP2y4HOU45DyMim1IeP/OOiyEWRr6qk5I5klpsBnbuHpwKmTx6WURnw==}
@@ -8760,11 +8772,13 @@ packages:
       pug-error: 2.1.0
       token-stream: 1.0.0
     dev: false
+    optional: true
 
   /pug-runtime@3.0.1:
     resolution: {integrity: sha512-L50zbvrQ35TkpHwv0G6aLSuueDRwc/97XdY8kL3tOT0FmhgG7UypU3VztfV/LATAvmUfYi4wNxSajhSAeNN+Kg==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /pug-strip-comments@2.0.0:
     resolution: {integrity: sha512-zo8DsDpH7eTkPHCXFeAk1xZXJbyoTfdPlNR0bK7rpOMuhBYb0f5qUVCO1xlsitYd3w5FQTK7zpNVKb3rZoUrrQ==}
@@ -8772,11 +8786,13 @@ packages:
     dependencies:
       pug-error: 2.1.0
     dev: false
+    optional: true
 
   /pug-walk@2.0.0:
     resolution: {integrity: sha512-yYELe9Q5q9IQhuvqsZNwA5hfPkMJ8u92bQLIMcsMxf/VADjNtEYptU+inlufAFYcWdHlwNfZOEnOOQrZrcyJCQ==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /pug@3.0.3:
     resolution: {integrity: sha512-uBi6kmc9f3SZ3PXxqcHiUZLmIXgfgWooKWXcwSGwQd2Zi5Rb0bT14+8CJjJgI8AB+nndLaNgHGrcc6bPIB665g==}
@@ -8790,6 +8806,7 @@ packages:
       pug-runtime: 3.0.1
       pug-strip-comments: 2.0.0
     dev: false
+    optional: true
 
   /punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
@@ -9908,6 +9925,7 @@ packages:
     resolution: {integrity: sha512-VSsyNPPW74RpHwR8Fc21uubwHY7wMDeJLys2IX5zJNih+OnAnaifKHo+1LHT7DAdloQ7apeaaWg8l7qnf/TnEg==}
     requiresBuild: true
     dev: false
+    optional: true
 
   /tough-cookie@4.1.4:
     resolution: {integrity: sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==}
@@ -10403,6 +10421,7 @@ packages:
     engines: {node: '>=0.10.0'}
     requiresBuild: true
     dev: false
+    optional: true
 
   /w3c-xmlserializer@4.0.0:
     resolution: {integrity: sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==}
@@ -10648,6 +10667,7 @@ packages:
       assert-never: 1.4.0
       babel-walk: 3.0.0-canary-5
     dev: false
+    optional: true
 
   /word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
