@@ -1,0 +1,15 @@
+meta {
+  name: Verificar Email
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/user/register/:otp
+  body: none
+  auth: inherit
+}
+
+params:path {
+  otp: 399153
+}

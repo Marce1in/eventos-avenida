@@ -1,0 +1,19 @@
+meta {
+  name: Registrar usuário
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/user/register/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "string",
+    "email": "user@example.com",
+    "passwd": "string"
+  }
+}
