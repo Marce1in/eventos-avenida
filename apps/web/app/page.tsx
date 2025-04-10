@@ -1,7 +1,10 @@
+import { Button } from "@/components/ui/button";
+
 function home(){
+
   return (
     <>
-      <h1>foooooooo</h1>
+      <Button>fooo</Button>
     </>
   )
 }
