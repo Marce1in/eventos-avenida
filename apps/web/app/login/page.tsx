@@ -30,19 +30,19 @@ function Login() {
   }
 
   return (
-    <main className="w-96 mt-[30vh] mx-auto rounded border border-accent-fore pt-10 pb-5 px-10">
+    <main className="w-96 mt-[30vh] mx-auto rounded border border-border pt-10 pb-5 px-10">
       <h1 className="text-center pb-5 font-extrabold text-2xl">Login</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
           {/* Email Field */}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>E-mail</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email" {...field} />
+                  <Input type="email" placeholder="E-mail" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
