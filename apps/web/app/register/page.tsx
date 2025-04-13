@@ -7,6 +7,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import api from "@/lib/api"
+import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { SyncLoader } from "react-spinners"
+import { toast } from "sonner"
 
 const registerSchema = z.object({
   name: z.string().min(1, "O usuário precisa de um nome").max(64, "O nome não pode ser maior que 64 letras"),
@@ -16,7 +21,19 @@ const registerSchema = z.object({
 
 type registerType = z.infer<typeof registerSchema>
 
-function Login() {
+function Register() {
+  const router = useRouter()
+
+  const registerUser = useMutation({
+    mutationFn: (data: registerType) => api.post("user/register", data),
+    onSuccess: () => {
+      toast.error("Usuário registrado com sucesso!")
+      router.push("/mail-verification")
+    },
+    onError: () => {
+      toast.error("Ops! algo deu errado")
+    }
+  })
 
   const form = useForm<registerType>({
     resolver: zodResolver(registerSchema),
@@ -28,21 +45,25 @@ function Login() {
   })
 
   function onSubmit(values: registerType) {
-    console.log(values)
+    registerUser.mutate(values)
   }
 
   return (
-    <main className="w-96 mt-[30vh] mx-auto rounded border border-accent-fore pt-10 pb-5 px-10">
-      <h1 className="text-center pb-5 font-extrabold text-2xl">Registro</h1>
+    <main className="w-96 mt-[30vh] mx-auto rounded border border-accent-fore shadow pt-10 pb-5 px-10">
+
+      <h1 className="text-center pb-5 font-extrabold text-2xl">
+        Registro
+      </h1>
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Email Field */}
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+          {/* Name Field */}
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input placeholder="Name" {...field} />
                 </FormControl>
@@ -57,9 +78,9 @@ function Login() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>E-mail</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Email" {...field} />
+                  <Input type="email" placeholder="E-mail" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -81,11 +102,12 @@ function Login() {
             )}
           />
 
-          <Button type="submit" className="w-full">
-            Criar
+          <Button type="submit" className={`w-full ${registerUser.isError && "bg-red-500 hover:bg-red-600"}`}>
+            {registerUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
           </Button>
         </form>
       </Form>
+
       <p className="text-right text-sm pt-5">Já tem uma conta? {" "}
         <Link href="/login" className="hover:underline font-bold">Faça login</Link>
       </p>
@@ -93,4 +115,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Register
