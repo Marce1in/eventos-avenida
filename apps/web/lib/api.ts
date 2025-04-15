@@ -9,3 +9,9 @@ const axiosBase = axios.create({
 })
 
 export default axiosBase
+
+export interface ApiError {
+  message: string
+  error: string
+  statusCode: number
+}
