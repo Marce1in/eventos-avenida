@@ -52,7 +52,7 @@ export class UserService {
     } catch (err) {
       this.logger.error(`Cache storage failed: ${err}`)
       throw new InternalServerErrorException(
-        'Failed to store user data temporalily'
+        'Incapaz de salvar dados'
       )
     };
 
@@ -60,13 +60,13 @@ export class UserService {
     try {
       await this.mailService.sendAccountVerification({ mail: registerUserDto.email, otp: otp })
     } catch (err) {
-      this.logger.error(`Failoed to send Email: ${err}`)
+      this.logger.error(`Failed to send Email: ${err}`)
       throw new ServiceUnavailableException(
-        'Unable to send verification email. Please try again later',
+        'Incapaz de enviar E-mail de verificação, tente novamente em breve',
       );
     }
 
-    return { message: 'Email sent successfully! it will expire in 15 minutes' };
+    return { message: 'Registro completo, verifique o seu E-mail!' };
   }
 
   async confirmMail(otp: string) {
@@ -79,12 +79,12 @@ export class UserService {
     } catch (err) {
       this.logger.error(`Cache error: ${err}`);
       throw new InternalServerErrorException(
-        'Unable to verify user',
+        'Incapaz de verificar usuário, tente novamente em breve',
       );
     }
 
     if (!registerUserDto) {
-      throw new NotFoundException('User not founded, try to register again');
+      throw new NotFoundException('Usuário não encontrado, tente registrar-se novamente');
     }
 
     // FINALLY register the new user in DB
@@ -92,18 +92,18 @@ export class UserService {
       await this.prisma.user.create({ data: registerUserDto })
     } catch (error) {
       throw new ConflictException(
-        'Sorry this email has already been verified',
+        'Desculpe, alguém já verificou esse E-mail',
       );
     }
 
 
-    return { message: 'User verified successfully' };
+    return { message: 'Usuário verificado com sucesso' };
   }
 
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({ where: { id: id } })
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuário não encontrado');
     }
     return user;
   }
