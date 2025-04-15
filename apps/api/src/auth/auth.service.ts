@@ -14,11 +14,11 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     const user = await this.prisma.user.findUnique({ where: { email: loginUserDto.email } })
     if (!user) {
-      throw new NotFoundException('User not found')
+      throw new NotFoundException('E-mail não registrado')
     }
 
     if (!await argon2.verify(user.passwd, loginUserDto.passwd)) {
-      throw new UnauthorizedException('User not authorized')
+      throw new UnauthorizedException('Senha incorreta')
     }
 
     const payload = { sub: user.id, username: user.name }

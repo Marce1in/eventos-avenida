@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request)
 
     if (!token) {
-      throw new UnauthorizedException("Token not found")
+      throw new UnauthorizedException("Token não encontrado")
     }
 
     try {
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
 
       request['user'] = payload
     } catch {
-      throw new UnauthorizedException("Invalid token")
+      throw new UnauthorizedException("Token Inválido")
     }
 
     return true
