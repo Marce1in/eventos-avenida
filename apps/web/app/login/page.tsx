@@ -30,49 +30,51 @@ function Login() {
   }
 
   return (
-    <main className="w-96 mt-[30vh] mx-auto rounded border border-border pt-10 pb-5 px-10">
-      <h1 className="text-center pb-5 font-extrabold text-2xl">Login</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          {/* Email Field */}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>E-mail</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="E-mail" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <div className="flex items-center justify-center h-screen">
+      <main className="w-96 rounded border border-border pt-10 pb-5 px-10">
+        <h1 className="text-center pb-5 font-extrabold text-2xl">Login</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+            {/* Email Field */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-mail</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="E-mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Password Field */}
-          <FormField
-            control={form.control}
-            name="passwd"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Senha</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Senha" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Password Field */}
+            <FormField
+              control={form.control}
+              name="passwd"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Senha" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button type="submit" className="w-full">
-            Entrar
-          </Button>
-        </form>
-      </Form>
-      <p className="text-right text-sm pt-5">Não tem uma conta? {" "}
+            <Button type="submit" className="w-full">
+              Entrar
+            </Button>
+          </form>
+        </Form>
+        <p className="text-right text-sm pt-5">Não tem uma conta? {" "}
           <Link href="/register" className="hover:underline font-bold">Registre-se</Link>
-      </p>
-    </main>
+        </p>
+      </main>
+    </div>
   )
 }
 
