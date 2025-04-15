@@ -45,48 +45,50 @@ function MailVerification() {
   }
 
   return (
-    <main className="w-96 mt-[30vh] mx-auto rounded border border-accent-fore pt-10 pb-5 px-10">
-      <h1 className="font-bold text-xl">
-        Código de verificação
-      </h1>
-      <p className="pb-5 font-light">
-        Envimos um código de verificação para o seu E-mail! Por favor digite-o abaixo:
-      </p>
+    <div className="flex items-center justify-center h-screen">
+      <main className="w-96 rounded border border-border shadow pt-10 pb-5 px-10">
+        <h1 className="font-bold text-xl">
+          Código de verificação
+        </h1>
+        <p className="pb-5 font-light">
+          Envimos um código de verificação para o seu E-mail! Por favor digite-o abaixo:
+        </p>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          <FormField control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} {...field}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+            <FormField control={form.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} {...field}>
 
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                    </InputOTPGroup>
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
 
-                  </InputOTP>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    </InputOTP>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button type="submit" className={`w-min ${verifyMail.isError && "bg-red-500 hover:bg-red-600"}`}>
-            {verifyMail.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Verificar"}
-          </Button>
-        </form>
-      </Form>
-    </main>
+            <Button type="submit" className={`w-min ${verifyMail.isError && "bg-red-500 hover:bg-red-600"}`}>
+              {verifyMail.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Verificar"}
+            </Button>
+          </form>
+        </Form>
+      </main>
+    </div>
   )
 }
 
