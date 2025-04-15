@@ -35,7 +35,9 @@ function Login() {
         <h1 className="text-center pb-5 font-extrabold text-2xl">Login</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-            {/* Email Field */}
+
+            {/* Fields */}
+
             <FormField
               control={form.control}
               name="email"
@@ -50,7 +52,6 @@ function Login() {
               )}
             />
 
-            {/* Password Field */}
             <FormField
               control={form.control}
               name="passwd"
