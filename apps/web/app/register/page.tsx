@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import api from "@/lib/api"
+import api, { ApiError } from "@/lib/api"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { SyncLoader } from "react-spinners"
@@ -27,18 +27,19 @@ const registerSchema = z
 
 type registerType = z.infer<typeof registerSchema>
 
+interface registerResponse {
+  message: string
+}
+
 function Register() {
   const router = useRouter()
 
-  const registerUser = useMutation({
-    mutationFn: (data: registerType) => api.post("user/register", data),
-    onSuccess: () => {
-      toast.error("Usuário registrado com sucesso!")
+  const registerUser = useMutation<registerResponse, ApiError, registerType>({
+    mutationFn: (data) => api.post("user/register", data),
+    onSuccess: (data) => {
+      toast.success(data.message)
       router.push("/mail-verification")
     },
-    onError: () => {
-      toast.error("Ops! algo deu errado")
-    }
   })
 
   const form = useForm<registerType>({
@@ -125,6 +126,13 @@ function Register() {
             <Button type="submit" className={`w-full ${registerUser.isError && "bg-red-500 hover:bg-red-600"}`}>
               {registerUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
             </Button>
+
+            {registerUser.isError && (
+              <p className="text-red-500 text-sm font-semibold text-center">
+                {registerUser.error.message}
+              </p>
+            )}
+
           </form>
         </Form>
 
