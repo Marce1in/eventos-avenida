@@ -97,7 +97,7 @@ export class UserService {
     }
 
 
-    return { message: 'Usuário verificado com sucesso' };
+    return { message: 'Usuário verificado com sucesso!' };
   }
 
   async findOne(id: string) {
