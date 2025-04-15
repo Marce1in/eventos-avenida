@@ -13,11 +13,17 @@ import { useRouter } from "next/navigation"
 import { SyncLoader } from "react-spinners"
 import { toast } from "sonner"
 
-const registerSchema = z.object({
-  name: z.string().min(1, "O usuário precisa de um nome").max(64, "O nome não pode ser maior que 64 letras"),
-  email: z.string().email("Email Inválido"),
-  passwd: z.string().min(4, "Senha deve ter mais que 4 letras"),
-})
+const registerSchema = z
+  .object({
+    name: z.string().min(1, "O usuário precisa de um nome").max(64, "O nome não pode ser maior que 64 letras"),
+    email: z.string().email("Email Inválido"),
+    passwd: z.string().min(4, "Senha deve ter mais que 4 letras"),
+    passconf: z.string().min(1, "Confirme sua senha"),
+  })
+  .refine(({ passwd, passconf }) => passwd === passconf, {
+    message: "Senhas não estão iguais",
+    path: ["passconf"]
+  })
 
 type registerType = z.infer<typeof registerSchema>
 
@@ -41,6 +47,7 @@ function Register() {
       name: "",
       email: "",
       passwd: "",
+      passconf: "",
     }
   })
 
@@ -57,10 +64,10 @@ function Register() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          {/* Name Field */}
-          <FormField
-            control={form.control}
-            name="name"
+
+          {/* Fields */}
+
+          <FormField control={form.control} name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nome</FormLabel>
@@ -72,7 +79,6 @@ function Register() {
             )}
           />
 
-          {/* Email Field */}
           <FormField
             control={form.control}
             name="email"
@@ -87,7 +93,6 @@ function Register() {
             )}
           />
 
-          {/* Password Field */}
           <FormField
             control={form.control}
             name="passwd"
@@ -96,6 +101,20 @@ function Register() {
                 <FormLabel>Senha</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="Senha" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="passconf"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmar senha</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Confirme sua senha" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
