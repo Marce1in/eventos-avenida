@@ -3,7 +3,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { z } from "zod"
-import api from "@/lib/api"
+import api, { ApiError } from "@/lib/api"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,34 +13,35 @@ import { Button } from "@/components/ui/button"
 import { SyncLoader } from "react-spinners"
 import { useRouter } from "next/navigation"
 
-const otpSchema = z.object({
+const verifyMailSchema = z.object({
   otp: z.string().length(6, "O código de segurança precisa ter 6 digitos")
 })
 
-type otpType = z.infer<typeof otpSchema>
+type verifyMailType = z.infer<typeof verifyMailSchema>
+
+interface verifyMailResponse {
+  message: string
+}
 
 function MailVerification() {
   const router = useRouter()
 
-  const verifyMail = useMutation({
-    mutationFn: (data: otpType) => api.post(`user/register/${data.otp}`),
-    onSuccess: () => {
-      toast.success("E-mail verificado com sucesso")
+  const verifyMail = useMutation<verifyMailResponse, ApiError, verifyMailType>({
+    mutationFn: (data) => api.post(`user/register/${data.otp}`),
+    onSuccess: (data) => {
+      toast.success(data.message)
       router.push("/login")
     },
-    onError: () => {
-      toast.error("Ops, algo deu errado!")
-    }
   })
 
-  const form = useForm<otpType>({
-    resolver: zodResolver(otpSchema),
+  const form = useForm<verifyMailType>({
+    resolver: zodResolver(verifyMailSchema),
     defaultValues: {
       otp: ""
     }
   })
 
-  function onSubmit(values: otpType) {
+  function onSubmit(values: verifyMailType) {
     verifyMail.mutate(values)
   }
 
@@ -85,6 +86,13 @@ function MailVerification() {
             <Button type="submit" className={`w-min ${verifyMail.isError && "bg-red-500 hover:bg-red-600"}`}>
               {verifyMail.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Verificar"}
             </Button>
+
+            {verifyMail.isError && (
+              <p className="text-red-500 text-sm font-semibold text-center">
+                  {verifyMail.error.message}
+              </p>
+            )}
+
           </form>
         </Form>
       </main>
