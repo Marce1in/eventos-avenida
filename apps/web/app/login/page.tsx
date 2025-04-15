@@ -7,6 +7,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
+import api, { ApiError } from "@/lib/api"
+import { toast } from "sonner"
+import { SyncLoader } from "react-spinners"
 
 const loginSchema = z.object({
   email: z.string().email("Email Inválido"),
@@ -15,7 +20,24 @@ const loginSchema = z.object({
 
 type loginType = z.infer<typeof loginSchema>
 
+interface loginResponse {
+  access_token: string
+}
+
 function Login() {
+  const router = useRouter()
+
+  const loginUser = useMutation<loginResponse, ApiError, loginType>({
+    mutationFn: (data) => api.post("auth/login", data).then(res => res.data),
+    onSuccess: (data) => {
+      localStorage.setItem("ACCESS_TOKEN", data.access_token)
+      toast.success("Usuário logado com sucesso")
+      router.push("/")
+    },
+    onError: () => {
+      toast.error("Ops! algo deu errado")
+    }
+  })
 
   const form = useForm<loginType>({
     resolver: zodResolver(loginSchema),
@@ -26,7 +48,7 @@ function Login() {
   })
 
   function onSubmit(values: loginType) {
-    console.log(values)
+    loginUser.mutate(values)
   }
 
   return (
@@ -66,8 +88,8 @@ function Login() {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button type="submit" className={`w-full ${loginUser.isError && "bg-red-500 hover:bg-red-600"}`}>
+              {loginUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
             </Button>
           </form>
         </Form>
