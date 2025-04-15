@@ -56,81 +56,83 @@ function Register() {
   }
 
   return (
-    <main className="w-96 mt-[30vh] mx-auto rounded border border-accent-fore shadow pt-10 pb-5 px-10">
+    <div className="flex items-center justify-center h-screen">
+      <main className="w-96 rounded border border-border shadow pt-10 pb-5 px-10">
 
-      <h1 className="text-center pb-5 font-extrabold text-2xl">
-        Registro
-      </h1>
+        <h1 className="text-center pb-5 font-extrabold text-2xl">
+          Registro
+        </h1>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
-          {/* Fields */}
+            {/* Fields */}
 
-          <FormField control={form.control} name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input placeholder="Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField control={form.control} name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>E-mail</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="E-mail" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-mail</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="E-mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="passwd"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Senha</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Senha" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="passwd"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Senha" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="passconf"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirmar senha</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Confirme sua senha" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="passconf"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar senha</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Confirme sua senha" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button type="submit" className={`w-full ${registerUser.isError && "bg-red-500 hover:bg-red-600"}`}>
-            {registerUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
-          </Button>
-        </form>
-      </Form>
+            <Button type="submit" className={`w-full ${registerUser.isError && "bg-red-500 hover:bg-red-600"}`}>
+              {registerUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
+            </Button>
+          </form>
+        </Form>
 
-      <p className="text-right text-sm pt-5">Já tem uma conta? {" "}
-        <Link href="/login" className="hover:underline font-bold">Faça login</Link>
-      </p>
-    </main>
+        <p className="text-right text-sm pt-5">Já tem uma conta? {" "}
+          <Link href="/login" className="hover:underline font-bold">Faça login</Link>
+        </p>
+      </main>
+    </div>
   )
 }
 
