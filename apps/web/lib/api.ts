@@ -8,6 +8,11 @@ const axiosBase = axios.create({
   }
 })
 
+axiosBase.interceptors.response.use(
+  res => res.data,
+  err => err.response ? Promise.reject(err.response.data) : Promise.reject(err)
+)
+
 export default axiosBase
 
 export interface ApiError {
