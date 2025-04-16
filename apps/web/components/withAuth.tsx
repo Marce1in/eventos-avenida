@@ -1,20 +1,26 @@
-import { ComponentType } from "react"
-import RedirectComponent from "./redirectComponent"
+'use client'
+import { ComponentType, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import FullScreenLoading from "./fullScreenLoading"
 
 function withAuth(Component: ComponentType<any>) {
   return function ProtectedRoute(props: any) {
-    if (typeof window === 'undefined') {
-      return (
-        <RedirectComponent path="/login" message="Usuário deslogado!" />
-      )
+    const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
+    const router = useRouter()
+
+    useEffect(() => {
+      const token = localStorage.getItem("ACCESS_TOKEN")
+      if (!token) {
+        router.replace("/login")
+      } else {
+        setIsAuthorized(true)
+      }
+    }, [])
+
+    if (!isAuthorized){
+      return <FullScreenLoading />
     }
 
-    const token = localStorage.getItem("ACCESS_TOKEN")
-    if (!token) {
-      return (
-        <RedirectComponent path="/login" message="Usuário deslogado!" />
-      )
-    }
     return <Component {...props} />
   }
 }
