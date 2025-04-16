@@ -51,7 +51,7 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <main className="w-96 rounded border border-border pt-10 pb-5 px-10">
+      <main className="w-96 shadow rounded border border-border pt-10 pb-5 px-10">
         <h1 className="text-center pb-5 font-extrabold text-2xl">Login</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">

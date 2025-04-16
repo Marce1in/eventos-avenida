@@ -1,4 +1,5 @@
 import axios from "axios"
+import { logout } from "./utils"
 
 const axiosBase = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -12,8 +13,7 @@ axiosBase.interceptors.response.use(
   res => {
     switch (res.status) {
       case 401:
-        localStorage.removeItem("ACCESS_TOKEN")
-        window.location.reload()
+        logout()
     }
 
     return res.data

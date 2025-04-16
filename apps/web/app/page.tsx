@@ -1,16 +1,16 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/hooks";
+import Navbar from "@/components/navbar";
+import withAuth from "@/components/withAuth";
+
 
 function home() {
-  useAuth()
-
 
   return (
     <>
-      <Button>fooo</Button>
+      <Navbar />
+      <Events />
     </>
   )
 }
 
-export default home;
+export default withAuth(home);
