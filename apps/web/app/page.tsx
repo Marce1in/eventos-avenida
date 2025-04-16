@@ -1,6 +1,10 @@
+'use client'
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/hooks";
 
-function home(){
+function home() {
+  useAuth()
+
 
   return (
     <>
