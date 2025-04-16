@@ -10,6 +10,9 @@ export class EventsService {
   ) { }
 
   create(createEventDto: CreateEventDto, userId: string) {
+    console.log(createEventDto)
+    console.log(userId)
+
     this.prisma.event.create({
       data: {
         name: createEventDto.name,
