@@ -9,11 +9,8 @@ export class EventsService {
     private readonly prisma: PrismaService
   ) { }
 
-  create(createEventDto: CreateEventDto, userId: string) {
-    console.log(createEventDto)
-    console.log(userId)
-
-    this.prisma.event.create({
+  async create(createEventDto: CreateEventDto, userId: string) {
+    await this.prisma.event.create({
       data: {
         name: createEventDto.name,
         description: createEventDto.description,
