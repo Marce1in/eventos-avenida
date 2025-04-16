@@ -9,8 +9,28 @@ const axiosBase = axios.create({
 })
 
 axiosBase.interceptors.response.use(
-  res => res.data,
+  res => {
+    switch (res.status) {
+      case 401:
+        localStorage.removeItem("ACCESS_TOKEN")
+        window.location.reload()
+    }
+
+    return res.data
+  },
   err => err.response ? Promise.reject(err.response.data) : Promise.reject(err)
+)
+
+axiosBase.interceptors.request.use(
+  conf => {
+    const token = localStorage.getItem("ACCESS_TOKEN")
+
+    if (token) {
+      conf.headers.Authorization = `Bearer ${token}`
+    }
+
+    return conf
+  }
 )
 
 export default axiosBase
