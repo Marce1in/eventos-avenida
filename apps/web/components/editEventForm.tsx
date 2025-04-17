@@ -26,6 +26,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Edit } from "lucide-react";
 import { SyncLoader } from "react-spinners";
+import axiosBase from "@/lib/api";
 
 const editEventFormSchema = z.object({
   name: z
@@ -70,19 +71,13 @@ function EditEventForm({ event }: EditEventFormProps) {
     },
   });
 
-  // Mock mutation function for updating event
-  function mockUpdateEvent(data: EditEventFormType) {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve({ ...data, id: event.id }), 800);
-    });
-  }
-
   const editEvent = useMutation({
-    mutationFn: mockUpdateEvent,
+    mutationFn: (data: EditEventFormType) => axiosBase.patch(`events/${event.id}`, data),
     onSuccess: () => {
       toast.success("Evento atualizado com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["event", "events"] });
       setOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["event"] });
+      form.reset()
     },
     onError: (error) => {
       toast.error(`Ops! algo deu errado ${error.message}`);

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -15,13 +15,13 @@ export class EventsController {
   }
 
   @Get()
-  findAll() {
-    return this.eventsService.findAll();
+  findAll(@Query('q') q?: string) {
+    return this.eventsService.findAll(q);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(String(id));
+  findOne(@Param('id') id: string, @Req() request: Request) {
+    return this.eventsService.findOne(String(id), request["user"].sub);
   }
 
   @Patch(':id')
@@ -32,10 +32,5 @@ export class EventsController {
   @Delete(':id')
   remove(@Param('id') id: string, @Req() request: Request) {
     return this.eventsService.remove(String(id), request["user"].sub);
-  }
-
-  @Get('search/:name')
-  searchByName(@Param('name') name: string) {
-    return this.eventsService.searchByName(String(name));
   }
 }

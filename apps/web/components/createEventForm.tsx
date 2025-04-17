@@ -75,12 +75,9 @@ function CreateEventForm() {
   });
 
   function handleSubmit(data: CreateEventFormType) {
-    console.log(data)
     createEvent.mutate(data);
-    if (createEvent.isSuccess) {
-      setOpen(false);
-      form.reset();
-    }
+    setOpen(false);
+    form.reset();
   }
 
   return (

@@ -3,10 +3,9 @@
 import DeleteEventForm from "@/components/deleteEventForm";
 import EditEventForm from "@/components/editEventForm";
 import Navbar from "@/components/navbar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ApiError } from "@/lib/api";
+import api, { ApiError } from "@/lib/api";
 import { EventI } from "@/lib/schemas";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Edit, MapPin, Trash2 } from "lucide-react";
@@ -21,27 +20,12 @@ interface EventPageQueryI extends EventI {
   is_owner: boolean
 }
 
-async function mockEvent(id: string): Promise<EventPageQueryI> {
-  const event = {
-    id: "e1a1fdd1-1111-4bdf-baaa-111111111111",
-    name: "Tech Conference 2025",
-    date: "2025-06-15",
-    time: "09:00",
-    location: "San Francisco, CA",
-    description: "Annual tech conference covering AI, blockchain, and more.",
-    userId: "user-uuid-1",
-    is_owner: true,
-  }
-
-  return new Promise(resolve => { setTimeout(() => resolve(event), 300) })
-}
-
 function EventPage({ params }: PageProps) {
   const { id } = use(params)
 
   const getEvent = useQuery<EventPageQueryI, ApiError>({
     queryKey: ["event"],
-    queryFn: () => mockEvent(id)
+    queryFn: () => api.get(`events/${id}`)
   })
 
 

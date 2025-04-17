@@ -14,7 +14,7 @@ function home() {
 
   const getEvents = useQuery<Event[], ApiError>({
     queryKey: ["events", query],
-    queryFn: () => api.get("events")
+    queryFn: () => api.get(`events?q=${query}`)
   })
 
 return (

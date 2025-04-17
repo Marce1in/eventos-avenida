@@ -1,11 +1,20 @@
-import { EventsI } from "@/lib/schemas"
+import { EventI } from "@/lib/schemas"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { MapPin } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-function EventsCards({ events }: EventsI) {
+function EventsCards({ events }: { events: EventI[]}) {
   const router = useRouter()
+  console.log(events)
+
+  if (events.length == 0) {
+    return (
+      <p>
+        Nenhum evento encontrado :(
+      </p>
+    )
+  }
 
   return events.map(event => (
     <Card key={event.id}>

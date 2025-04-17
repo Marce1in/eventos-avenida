@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class EventsService {
   constructor(
     private readonly prisma: PrismaService
-  ) {}
+  ) { }
 
   async create(createEventDto: CreateEventDto, userId: string) {
     await this.prisma.event.create({
@@ -24,65 +24,69 @@ export class EventsService {
     return { message: "Evento criado com sucesso!" };
   }
 
-  async findAll() {
-    return this.prisma.event.findMany();
+  async findAll(q?: string) {
+    return this.prisma.event.findMany({
+      where: q
+        ? {
+          name: {
+            contains: q,
+            mode: 'insensitive',
+          },
+        }
+        : undefined,
+    });
   }
 
-  async findOne(id: string) {
-    return this.prisma.event.findUnique({
-      where: { id }
+  async findOne(id: string, userId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id },
     });
+
+    if (!event) {
+      throw new NotFoundException('Evento não encontrado');
+    };
+
+    return {
+      ...event,
+      is_owner: event.userId === userId,
+    };
   }
 
   async update(id: string, updateEventDto: UpdateEventDto, userId: string) {
     const event = await this.prisma.event.findUnique({
       where: { id },
     });
-  
+
     if (!event) {
       throw new NotFoundException('Evento não encontrado');
     }
-  
+
     if (event.userId !== userId) {
       throw new ForbiddenException('Você não tem permissão para editar este evento');
     }
-  
+
     return this.prisma.event.update({
       where: { id },
       data: updateEventDto,
     });
   }
-  
+
 
   async remove(id: string, userId: string) {
     const event = await this.prisma.event.findUnique({
       where: { id },
     });
-  
+
     if (!event) {
       throw new NotFoundException('Evento não encontrado');
     }
-  
+
     if (event.userId !== userId) {
       throw new ForbiddenException('Você não tem permissão para excluir este evento');
     }
-  
+
     return this.prisma.event.delete({
       where: { id },
     });
   }
-  
-
-  async searchByName(name: string) {
-    return this.prisma.event.findMany({
-      where: {
-        name: {
-          contains: name,
-          mode: 'insensitive',
-        }
-      }
-    });
-  }
-  
-
 }

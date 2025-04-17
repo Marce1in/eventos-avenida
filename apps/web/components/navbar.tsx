@@ -1,19 +1,18 @@
 import { useRouter } from "next/navigation"
 import { Button } from "./ui/button"
 import { logout } from "@/lib/utils"
+import Link from "next/link"
 
 function Navbar() {
-  const router = useRouter()
-
   return (
     <>
       <nav className="bg-foreground p-2.5 flex justify-between items-center">
-        <a
+        <Link
           className="text-primary-foreground text-xl"
-          onClick={() => router.push("")}
+          href={"/"}
         >
           Eventos Avenida
-        </a>
+        </Link>
         <Button variant={"secondary"} onClick={() => logout()}>Sair</Button>
       </nav>
     </>

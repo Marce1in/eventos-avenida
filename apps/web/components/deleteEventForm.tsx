@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { z } from "zod";
 import { SyncLoader } from "react-spinners";
+import axiosBase from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 const deleteEventSchema = z.object({});
 type DeleteEventFormType = z.infer<typeof deleteEventSchema>;
@@ -27,20 +29,15 @@ interface DeleteEventFormProps {
 function DeleteEventForm({ eventId }: DeleteEventFormProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-
-  // Mock mutation function for deleting event
-  function mockDeleteEvent(id: string) {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(id), 800);
-    });
-  }
+  const router = useRouter();
 
   const deleteEvent = useMutation({
-    mutationFn: () => mockDeleteEvent(eventId),
+    mutationFn: () => axiosBase.delete(`events/${eventId}`),
     onSuccess: () => {
-      toast.success("Evento deletado com sucesso! (mock)");
+      toast.success("Evento deletado com sucesso!");
       setOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["event"] });
+      queryClient.invalidateQueries({ queryKey: ["events", "event"] });
+      router.push("/")
     },
     onError: (error) => {
       toast.error(`Ops! algo deu errado ${error.message}`);
@@ -52,7 +49,7 @@ function DeleteEventForm({ eventId }: DeleteEventFormProps) {
     defaultValues: {},
   });
 
-  function handleDelete(data: DeleteEventFormType) {
+  function handleDelete() {
     deleteEvent.mutate();
   }
 
