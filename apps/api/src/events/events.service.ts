@@ -46,4 +46,17 @@ export class EventsService {
       where: { id }
     });
   }
+
+  async searchByName(name: string) {
+    return this.prisma.event.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        }
+      }
+    });
+  }
+  
+
 }

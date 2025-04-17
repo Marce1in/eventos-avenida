@@ -33,4 +33,9 @@ export class EventsController {
   remove(@Param('id') id: string) {
     return this.eventsService.remove(String(id));
   }
+
+  @Get('search/:name')
+  searchByName(@Param('name') name: string) {
+    return this.eventsService.searchByName(String(name));
+  }
 }
