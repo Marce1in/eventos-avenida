@@ -5,10 +5,11 @@ import EditEventForm from "@/components/editEventForm";
 import Navbar from "@/components/navbar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import withAuth from "@/components/withAuth";
 import api, { ApiError } from "@/lib/api";
 import { EventI } from "@/lib/schemas";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Clock, Edit, MapPin, Trash2 } from "lucide-react";
+import { Calendar, Clock, MapPin } from "lucide-react";
 import { use } from "react";
 import { SyncLoader } from "react-spinners";
 
@@ -66,7 +67,7 @@ function EventPage({ params }: PageProps) {
                     </li>
                     <li className="flex items-center text-slate-700">
                       <Clock className="mr-3 h-5 w-5 text-slate-500" />
-                      <span>{getEvent.data.time}</span>
+                      <span>{getEvent.data.time.slice(0, 5)}</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -91,4 +92,4 @@ function EventPage({ params }: PageProps) {
   }
 }
 
-export default EventPage
+export default withAuth(EventPage)

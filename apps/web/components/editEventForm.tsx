@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -60,24 +60,35 @@ interface EditEventFormProps {
 function EditEventForm({ event }: EditEventFormProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+
+
   const form = useForm<EditEventFormType>({
     resolver: zodResolver(editEventFormSchema),
     defaultValues: {
       name: event.name,
       description: event.description,
       location: event.location,
-      time: event.time,
+      time: event.time.slice(0, 5),
       date: event.date,
     },
   });
+
+  useEffect(() => {
+    form.setValue("name", event.name);
+    form.setValue("description", event.description);
+    form.setValue("location", event.location);
+    form.setValue("time", event.time.slice(0, 5));
+    form.setValue("date", event.date);
+  }, [event])
 
   const editEvent = useMutation({
     mutationFn: (data: EditEventFormType) => axiosBase.patch(`events/${event.id}`, data),
     onSuccess: () => {
       toast.success("Evento atualizado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["event", "events"] });
-      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["events"] })
+      queryClient.refetchQueries({ queryKey: ["event"] })
       form.reset()
+      setOpen(false)
     },
     onError: (error) => {
       toast.error(`Ops! algo deu errado ${error.message}`);
@@ -92,7 +103,7 @@ function EditEventForm({ event }: EditEventFormProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center">
-          <Edit className="mr-2 h-4 w-4" /> Update
+          <Edit className="mr-2 h-4 w-4" /> Editar
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -135,7 +146,11 @@ function EditEventForm({ event }: EditEventFormProps) {
                   <FormItem>
                     <FormLabel>Data</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input
+                        min={new Date().toISOString().split("T", 1)[0]}
+                        type="date"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

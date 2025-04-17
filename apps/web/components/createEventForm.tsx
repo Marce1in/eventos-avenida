@@ -24,6 +24,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 import api, { ApiError } from "@/lib/api";
+import { SyncLoader } from "react-spinners";
 
 const createEventFormSchema = z.object({
   name: z.
@@ -68,6 +69,8 @@ function CreateEventForm() {
     onSuccess: () => {
       toast.success("Evento criado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["events"] });
+      setOpen(false);
+      form.reset();
     },
     onError: (error) => {
       toast.error(`Ops! algo deu errado ${error.message}`);
@@ -76,8 +79,6 @@ function CreateEventForm() {
 
   function handleSubmit(data: CreateEventFormType) {
     createEvent.mutate(data);
-    setOpen(false);
-    form.reset();
   }
 
   return (
@@ -133,7 +134,11 @@ function CreateEventForm() {
                     <FormItem>
                       <FormLabel>Data</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input
+                          min={ new Date().toISOString().split("T", 1)[0] }
+                          type="date"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -170,7 +175,9 @@ function CreateEventForm() {
               />
 
               <DialogFooter>
-                <Button type="submit">Criar</Button>
+                <Button type="submit">
+                  {createEvent.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
+                </Button>
               </DialogFooter>
             </form>
           </Form>

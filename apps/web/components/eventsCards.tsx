@@ -27,7 +27,7 @@ function EventsCards({ events }: { events: EventI[]}) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p>Dia {event.date} as {event.time}</p>
+        <p>Dia {event.date} as {event.time.slice(0, 5)}</p>
       </CardContent>
       <CardFooter>
         <Button
