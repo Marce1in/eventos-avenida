@@ -3,8 +3,9 @@ import { Input } from "./ui/input"
 import { Form, FormControl, FormField, FormItem } from "./ui/form"
 import { Button } from "./ui/button"
 import { Search } from "lucide-react"
+import { Dispatch, SetStateAction } from "react"
 
-function SearchBar() {
+function SearchBar({ querySetter }: { querySetter: Dispatch<SetStateAction<string>> }) {
   const form = useForm({
     defaultValues: {
       query: "",
@@ -12,7 +13,7 @@ function SearchBar() {
   })
 
   function onSubmit({ query }: { query: string }) {
-    console.log(query)
+    querySetter(query)
   }
 
   return (

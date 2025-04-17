@@ -7,26 +7,33 @@ import withAuth from "@/components/withAuth";
 import { ApiError } from "@/lib/api";
 import { EventsI } from "@/lib/schemas";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 
-async function mockEvents(): Promise<EventsI> {
+async function mockEvents(query: string): Promise<EventsI> {
+  if (query) {
+    console.log("TENHO UMA QUERY FRESQUINHA")
+  } else {
+    console.log("Não tenho uma query papai :(")
+  }
+
   return new Promise(resolve => { setTimeout(() => resolve({ events: mockData }), 300) })
 }
 
 function home() {
+  const [query, setQuery] = useState("")
+
   const getEvents = useQuery<EventsI, ApiError>({
-    queryKey: ["events"],
-    queryFn: () => mockEvents()
+    queryKey: ["events", query],
+    queryFn: () => mockEvents(query)
   })
 
-  console.log(getEvents.data)
-
-  return (
+return (
     <>
       <Navbar />
 
       <div className="flex justify-between p-5">
-        <SearchBar />
+        <SearchBar querySetter={setQuery}/>
         <CreateEventForm />
       </div>
 
