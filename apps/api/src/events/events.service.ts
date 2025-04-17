@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -34,18 +34,44 @@ export class EventsService {
     });
   }
 
-  async update(id: string, updateEventDto: UpdateEventDto) {
+  async update(id: string, updateEventDto: UpdateEventDto, userId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id },
+    });
+  
+    if (!event) {
+      throw new NotFoundException('Evento não encontrado');
+    }
+  
+    if (event.userId !== userId) {
+      throw new ForbiddenException('Você não tem permissão para editar este evento');
+    }
+  
     return this.prisma.event.update({
       where: { id },
       data: updateEventDto,
     });
   }
+  
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id },
+    });
+  
+    if (!event) {
+      throw new NotFoundException('Evento não encontrado');
+    }
+  
+    if (event.userId !== userId) {
+      throw new ForbiddenException('Você não tem permissão para excluir este evento');
+    }
+  
     return this.prisma.event.delete({
-      where: { id }
+      where: { id },
     });
   }
+  
 
   async searchByName(name: string) {
     return this.prisma.event.findMany({

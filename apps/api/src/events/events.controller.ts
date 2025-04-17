@@ -25,13 +25,13 @@ export class EventsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(String(id), updateEventDto);
+  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto, @Req() request: Request) {
+    return this.eventsService.update(String(id), updateEventDto, request["user"].sub);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventsService.remove(String(id));
+  remove(@Param('id') id: string, @Req() request: Request) {
+    return this.eventsService.remove(String(id), request["user"].sub);
   }
 
   @Get('search/:name')
