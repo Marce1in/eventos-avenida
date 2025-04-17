@@ -30,8 +30,8 @@ export class EventsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventsService.remove(String(id));
+  remove(@Param('id') id: string, @Req() request: Request) {
+    return this.eventsService.remove(String(id), request["user"].sub);
   }
 
   @Get('search/:name')
