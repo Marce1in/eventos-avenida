@@ -1,11 +1,10 @@
 import { ApiError } from "@/lib/api"
-import { EventsI } from "@/lib/schemas"
 import { UseQueryResult } from "@tanstack/react-query"
 import { SyncLoader } from "react-spinners"
 import EventsCards from "./eventsCards"
 
 interface EventsProps {
-  eventsQuery: UseQueryResult<EventsI, ApiError>
+  eventsQuery: UseQueryResult<Event[], ApiError>
 }
 
 function EventsContainer({ eventsQuery }: EventsProps) {
@@ -18,7 +17,7 @@ function EventsContainer({ eventsQuery }: EventsProps) {
   } else if (eventsQuery.isSuccess) {
     return (
       <main className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-5 p-5">
-        <EventsCards events={eventsQuery.data.events} />
+        <EventsCards events={eventsQuery.data} />
       </main>
     )
   } else {

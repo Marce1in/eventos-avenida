@@ -7,7 +7,3 @@ export interface EventI {
   description: string
   userId: string
 }
-
-export interface EventsI {
-  events: EventI[]
-}
