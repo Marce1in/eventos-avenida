@@ -28,6 +28,7 @@ const NewPassRequest = () => {
         onSuccess: () => {
             toast.success("Solicitação enviada com sucesso!")
             form.reset()
+            window.location.href = "/newpass"
         },
         onError: () => {
             toast.error("Erro ao enviar solicitação.")
