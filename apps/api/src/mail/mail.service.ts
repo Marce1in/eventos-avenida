@@ -29,7 +29,7 @@ export class MailService {
       template: './changePassReq',
 
       context: {
-        token: passwordResetDto.otp,
+        otp: passwordResetDto.otp,
       },
     });
   }
