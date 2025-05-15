@@ -147,4 +147,37 @@ export class UserService {
 
     return { message: 'Verifique o seu E-mail!' };
   }
+
+  async changePass(otp: string, newPasswd: string) {
+    let userData: { email: string };
+
+    try {
+      userData = await this.cacheManager.get<{ email: string }>(otp)
+    } catch (err) {
+      this.logger.error(`Cache error: ${err}`);
+      throw new InternalServerErrorException(
+        'Incapaz de verificar usuário, tente novamente em breve',
+      );
+    }
+
+    if (!userData) {
+      throw new NotFoundException('Usuário não encontrado, tente registrar-se novamente');
+    }
+
+    const passwdHash = await argon2.hash(newPasswd, { type: argon2.argon2id })
+
+    try {
+      await this.prisma.user.update({
+        where: { email: userData.email },
+        data: { passwd: passwdHash }
+      })
+    } catch (error) {
+      throw new ConflictException(
+        'Desculpe, alguém já verificou esse E-mail',
+      );
+    }
+
+
+    return { message: 'Senha alterada com sucesso!' };
+  }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { GetOneUserDto } from './dto/get-one-user.dto';
@@ -25,5 +25,10 @@ export class UserController {
   @Post('change-pass-req')
   passwordReset(@Body() body: { email: string }) {
     return this.userService.changePassReq(body.email);
+  }
+
+  @Patch('change-pass/:otp')
+  changePass(@Param('otp') otp: string, @Body() body: { passwd: string }) {
+    return this.userService.changePass(otp, body.passwd); 
   }
 }
