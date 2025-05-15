@@ -101,6 +101,9 @@ function Login() {
         <p className="text-right text-sm pt-5">Não tem uma conta? {" "}
           <Link href="/register" className="hover:underline font-bold">Registre-se</Link>
         </p>
+        <p className="text-right text-sm pt-5">Esqueceu sua senha? {" "}
+          <Link href="/newpassreq" className="hover:underline font-bold">Recuperar</Link>
+        </p>
       </main>
     </div>
   )
