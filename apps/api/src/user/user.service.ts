@@ -107,4 +107,44 @@ export class UserService {
     }
     return user;
   }
+
+  async changePassReq(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: email }
+    })
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado')
+    }
+
+    const otp = generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+      digits: true,
+    })
+
+    try {
+      await this.cacheManager.set(
+        otp,
+        { email: email },
+        1000 * 60 * 15
+      );
+    } catch (err) {
+      this.logger.error(`Cache storage failed: ${err}`)
+      throw new InternalServerErrorException(
+        'Incapaz de salvar dados'
+      )
+    };
+
+    try {
+      await this.mailService.sendPasswordChange({ mail: email, otp: otp })
+    } catch (err) {
+      this.logger.error(`Failed to send Email: ${err}`)
+      throw new ServiceUnavailableException(
+        'Incapaz de enviar E-mail de verificação, tente novamente em breve',
+      );
+    }
+
+    return { message: 'Verifique o seu E-mail!' };
+  }
 }

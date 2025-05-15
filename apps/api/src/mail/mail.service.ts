@@ -19,4 +19,18 @@ export class MailService {
       },
     });
   }
+
+  async sendPasswordChange(
+    passwordResetDto: AccountVerificationDto,
+  ) {
+    await this.mailerService.sendMail({
+      to: passwordResetDto.mail,
+      subject: 'Password Reset Request',
+      template: './changePassReq',
+
+      context: {
+        token: passwordResetDto.otp,
+      },
+    });
+  }
 }

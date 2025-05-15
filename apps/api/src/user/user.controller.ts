@@ -21,4 +21,9 @@ export class UserController {
   findOne(@Param() getOneUserDto: GetOneUserDto) {
     return this.userService.findOne(getOneUserDto.id);
   }
+  
+  @Post('change-pass-req')
+  passwordReset(@Body() body: { email: string }) {
+    return this.userService.changePassReq(body.email);
+  }
 }
