@@ -1,6 +1,11 @@
 import ChangeUserDataForm from "@/components/changeUserDataForm"
+import FullScreenLoading from "@/components/fullScreenLoading"
+import { useAuthGuard } from "@/lib/hooks"
 
 function ProfilePage() {
+  const loading = useAuthGuard()
+  if (loading)
+    return <FullScreenLoading />
 
   return (
     <div className="mx-[15vw] pt-10">

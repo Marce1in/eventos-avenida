@@ -2,6 +2,7 @@
 import { ComponentType, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import FullScreenLoading from "./fullScreenLoading"
+import * as jose from 'jose'
 
 function withAuth(Component: ComponentType<any>) {
   return function ProtectedRoute(props: any) {
@@ -12,12 +13,20 @@ function withAuth(Component: ComponentType<any>) {
       const token = localStorage.getItem("ACCESS_TOKEN")
       if (!token) {
         router.replace("/login")
-      } else {
-        setIsAuthorized(true)
+        return
       }
+      const decodedToken = jose.decodeJwt(token)
+
+      if (decodedToken.exp && Date.now() > decodedToken.exp * 1000) {
+        router.replace("/login")
+        localStorage.removeItem("ACCESS_TOKEN")
+        return
+      }
+
+      setIsAuthorized(true)
     }, [])
 
-    if (!isAuthorized){
+    if (!isAuthorized) {
       return <FullScreenLoading />
     }
 

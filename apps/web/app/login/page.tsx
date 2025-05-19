@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query"
 import api, { ApiError } from "@/lib/api"
 import { toast } from "sonner"
 import { SyncLoader } from "react-spinners"
+import useAuth from "@/lib/loginContext"
 
 const loginSchema = z.object({
   email: z.string().email("Email Inválido"),
@@ -27,11 +28,12 @@ interface loginResponse {
 
 function Login() {
   const router = useRouter()
+  const { login } = useAuth()
 
   const loginUser = useMutation<loginResponse, ApiError, loginType>({
     mutationFn: (data) => api.post("auth/login", data),
     onSuccess: (data) => {
-      localStorage.setItem("ACCESS_TOKEN", data.access_token)
+      login(data.access_token)
       toast.success("Usuário logado com sucesso")
       router.push("/")
     },

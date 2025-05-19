@@ -1,15 +1,18 @@
 'use client'
 import CreateEventForm from "@/components/createEventForm";
 import EventsContainer from "@/components/eventsContainer";
+import FullScreenLoading from "@/components/fullScreenLoading";
 import Navbar from "@/components/navbar";
 import SearchBar from "@/components/searchBar";
-import withAuth from "@/components/withAuth";
 import api, { ApiError } from "@/lib/api";
+import { useAuthGuard } from "@/lib/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 
 function home() {
+  const isLoading = useAuthGuard()
+
   const [query, setQuery] = useState("")
 
   const getEvents = useQuery<Event[], ApiError>({
@@ -17,12 +20,15 @@ function home() {
     queryFn: () => api.get(`events?q=${query}`)
   })
 
-return (
+  if (isLoading)
+    return <FullScreenLoading />
+
+  return (
     <>
       <Navbar />
 
       <div className="flex justify-between p-5">
-        <SearchBar querySetter={setQuery}/>
+        <SearchBar querySetter={setQuery} />
         <CreateEventForm />
       </div>
 
@@ -31,4 +37,4 @@ return (
   )
 }
 
-export default withAuth(home);
+export default home;

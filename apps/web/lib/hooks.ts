@@ -1,17 +1,24 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import useAuth from "./loginContext";
 
-export function useAuth(){
+export function useAuthGuard() {
+  const { checkExpiration, isAuthenticated } = useAuth()
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    checkExpiration()
 
-    if (!localStorage.getItem("ACCESS_TOKEN")) {
-      toast.error("Usuário deslogado")
+    if (!isAuthenticated) {
       router.push("/login")
+    } else {
+      setLoading(false)
     }
-  },[])
+
+  }, [isAuthenticated])
+
+  return loading
 }

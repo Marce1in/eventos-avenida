@@ -1,12 +1,12 @@
 import { useRouter } from "next/navigation"
-import { Button } from "./ui/button"
-import { logout } from "@/lib/utils"
 import Link from "next/link"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { User } from "lucide-react"
+import useAuth from "@/lib/loginContext"
 
 function Navbar() {
   const router = useRouter()
+  const { logout } = useAuth()
 
   return (
     <>
@@ -26,7 +26,7 @@ function Navbar() {
             <DropdownMenuLabel>Bem-vindo</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push("/profile")}>Perfil</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => logout()}>Sair</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => { logout(); router.push("/login") }}>Sair</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </nav>
