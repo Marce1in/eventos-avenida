@@ -13,6 +13,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 import FullScreenLoading from "./fullScreenLoading"
 import { SyncLoader } from "react-spinners"
+import useAuth from "@/lib/loginContext"
 
 const changeUserDataSchema = z
   .object({
@@ -38,10 +39,11 @@ interface getUserDataResponse {
 }
 
 function ChangeUserDataForm() {
+  const { userId } = useAuth()
 
   const getUserData = useQuery<getUserDataResponse, ApiError>({
     queryKey: ["userData"],
-    queryFn: () => api.get("user/changeUserData"),
+      queryFn: () => api.get(`user/${userId}`),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { GetOneUserDto } from './dto/get-one-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +22,7 @@ export class UserController {
   findOne(@Param() getOneUserDto: GetOneUserDto) {
     return this.userService.findOne(getOneUserDto.id);
   }
-  
+
   @Post('change-pass-req')
   passwordReset(@Body() body: { email: string }) {
     return this.userService.changePassReq(body.email);
@@ -29,6 +30,12 @@ export class UserController {
 
   @Patch('change-pass/:otp')
   changePass(@Param('otp') otp: string, @Body() body: { passwd: string }) {
-    return this.userService.changePass(otp, body.passwd); 
+    return this.userService.changePass(otp, body.passwd);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('edit-user-info')
+  editUserInfo() {
+    return this.userService.editUserInfo();
   }
 }
