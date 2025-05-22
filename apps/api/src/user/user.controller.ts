@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseGuards, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { GetOneUserDto } from './dto/get-one-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { EditUserDto } from './dto/edit-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -35,7 +36,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Patch('edit-user-info')
-  editUserInfo() {
-    return this.userService.editUserInfo();
+  editUserInfo(@Body() editUserDto: EditUserDto, @Req() request: Request) {
+    return this.userService.editUserInfo(editUserDto, request["user"].sub);
   }
 }

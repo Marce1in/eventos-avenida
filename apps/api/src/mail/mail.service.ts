@@ -11,7 +11,7 @@ export class MailService {
   ) {
     await this.mailerService.sendMail({
       to: accountVerificationDto.mail,
-      subject: 'Account Verification',
+      subject: 'Verificação de conta',
       template: './accountVerification',
 
       context: {
@@ -25,11 +25,25 @@ export class MailService {
   ) {
     await this.mailerService.sendMail({
       to: passwordResetDto.mail,
-      subject: 'Password Reset Request',
+      subject: 'Requisição de troca de senha',
       template: './changePassReq',
 
       context: {
         otp: passwordResetDto.otp,
+      },
+    });
+  }
+
+  async sendEmailChangeConfirmation(
+    emailChangeConfDto: AccountVerificationDto
+  ){
+    await this.mailerService.sendMail({
+      to: emailChangeConfDto.mail,
+      subject: 'Confirmar mudança de E-mail',
+      template: './changePassReq',
+
+      context: {
+        token: emailChangeConfDto.otp,
       },
     });
   }

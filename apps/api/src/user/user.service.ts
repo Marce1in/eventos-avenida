@@ -5,6 +5,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import * as argon2 from 'argon2'
 import { generate } from 'otp-generator'
 import { MailService } from 'src/mail/mail.service';
+import { EditUserDto } from './dto/edit-user.dto';
 
 @Injectable()
 export class UserService {
@@ -189,7 +190,27 @@ export class UserService {
     }
 
 
-    editUserInfo() {
-        throw new Error('Method not implemented.');
+    async editUserInfo(editUserDto: EditUserDto, userId: string) {
+        const user = await this.findOne(userId)
+
+        if (editUserDto.name != user.name) {
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: { name: editUserDto.name }
+            })
+        }
+        if (editUserDto.email != user.email) {
+
+        }
+        if (editUserDto.passwd) {
+            const passwdHash = await argon2.hash(editUserDto.passwd, {
+                type: argon2.argon2id
+            })
+
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: { passwd: passwdHash }
+            })
+        }
     }
 }
