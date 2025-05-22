@@ -23,7 +23,7 @@ const NewPassRequest = () => {
 
     const requestPasswordReset = useMutation({
         mutationFn: async (data: { email: string }) => {
-            await api.post("/password-reset", data)
+            await api.post("user/change-pass-req", data)
         },
         onSuccess: () => {
             toast.success("Solicitação enviada com sucesso!")
