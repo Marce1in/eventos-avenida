@@ -1,5 +1,5 @@
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
-import { ConflictException, Inject, Injectable, InternalServerErrorException, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as argon2 from 'argon2'
@@ -172,7 +172,12 @@ export class UserService {
             throw new NotFoundException('Usuário não encontrado, tente registrar-se novamente');
         }
 
-        const passwdHash = await argon2.hash(newPasswd, { type: argon2.argon2id })
+        if (!newPasswd || typeof newPasswd !== 'string') {
+            throw new BadRequestException('A nova senha é obrigatória e deve ser uma string.');
+        }
+
+        const passwdHash = await argon2.hash(newPasswd, { type: argon2.argon2id });
+
 
         try {
             await this.prisma.user.update({

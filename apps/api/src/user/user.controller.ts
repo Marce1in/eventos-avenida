@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Patch, UseGuards, Req } from '@nest
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { GetOneUserDto } from './dto/get-one-user.dto';
+import { ChangePassDto } from './dto/change-pass.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { EditUserDto } from './dto/edit-user.dto';
 
@@ -29,9 +30,9 @@ export class UserController {
     return this.userService.changePassReq(body.email);
   }
 
-  @Patch('change-pass/:otp')
-  changePass(@Param('otp') otp: string, @Body() body: { passwd: string }) {
-    return this.userService.changePass(otp, body.passwd);
+  @Patch('change-pass')
+    changePass(@Body() body: ChangePassDto) {
+    return this.userService.changePass(body.otp, body.newPasswd);
   }
 
   @UseGuards(AuthGuard)

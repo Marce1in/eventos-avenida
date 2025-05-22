@@ -14,11 +14,11 @@ import { useRouter } from "next/navigation"
 
 const resetPasswordSchema = z.object({
     token: z.string().nonempty("Token é obrigatório"),
-    newPassword: z.string().min(4, "Senha deve ter mais que 4 letras"),
+    newPasswd: z.string().min(4, "Senha deve ter mais que 4 letras"),
     confirmPassword: z.string().min(4, "Senha deve ter mais que 4 letras"),
-}).refine(data => data.newPassword === data.confirmPassword, {
+}).refine(data => data.newPasswd === data.confirmPassword, {
     message: "As senhas não coincidem",
-    path: ["confirmPassword"],
+    path: ["newPasswd"],
 })
 
 type ResetPasswordType = z.infer<typeof resetPasswordSchema>
@@ -27,8 +27,12 @@ function ResetPassword() {
     const router = useRouter()
 
     const resetPasswordMutation = useMutation<void, ApiError, ResetPasswordType>({
-        mutationFn: (data) => api.post("auth/reset-password", data),
-        onSuccess: () => {
+        mutationFn: (data) => api.patch(`user/change-pass`, {
+            otp: data.token,
+            newPasswd: data.newPasswd
+        }),
+
+        onSuccess: (data) => {
             toast.success("Senha alterada com sucesso")
             router.push("/login")
         },
@@ -38,7 +42,7 @@ function ResetPassword() {
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: {
             token: "",
-            newPassword: "",
+            newPasswd: "",
             confirmPassword: "",
         }
     })
@@ -72,7 +76,7 @@ function ResetPassword() {
                         {/* New Password Field */}
                         <FormField
                             control={form.control}
-                            name="newPassword"
+                            name="newPasswd"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nova Senha</FormLabel>
