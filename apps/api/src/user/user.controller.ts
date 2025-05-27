@@ -40,4 +40,9 @@ export class UserController {
   editUserInfo(@Body() editUserDto: EditUserDto, @Req() request: Request) {
     return this.userService.editUserInfo(editUserDto, request["user"].sub);
   }
+
+  @Post('edit-user-info/:token')
+  verifyMailChange(@Param('token') token: string){
+    return this.userService.verifyMailChange(token)
+  }
 }

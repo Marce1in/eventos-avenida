@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import useAuth from "./loginContext";
 
 export function useAuthGuard() {
-  const { checkExpiration, isAuthenticated } = useAuth()
+  const { checkExpiration, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     checkExpiration()
+
+    if (isLoading) return
 
     if (!isAuthenticated) {
       router.push("/login")
@@ -18,7 +20,7 @@ export function useAuthGuard() {
       setLoading(false)
     }
 
-  }, [isAuthenticated])
+  }, [isLoading, isAuthenticated])
 
   return loading
 }

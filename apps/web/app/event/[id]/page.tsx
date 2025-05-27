@@ -3,14 +3,14 @@
 import DeleteEventForm from "@/components/deleteEventForm";
 import EditEventForm from "@/components/editEventForm";
 import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import withAuth from "@/components/withAuth";
 import api, { ApiError } from "@/lib/api";
 import { useAuthGuard } from "@/lib/hooks";
 import { EventI } from "@/lib/schemas";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Check, Clock, MapPin } from "lucide-react";
 import { use } from "react";
 import { SyncLoader } from "react-spinners";
 
@@ -82,12 +82,17 @@ function EventPage({ params }: PageProps) {
               </CardContent>
             </Card>
 
-            {getEvent.data.is_owner && (
-              <div className="flex space-x-4 mt-6">
-                <DeleteEventForm eventId={getEvent.data.id} />
-                <EditEventForm event={getEvent.data} />
-              </div>
-            )}
+            <div className="flex space-x-4 mt-6">
+              <Button variant="outline" className="flex items-center w-32">
+                <Check className="mr-2 h-4 w-4" /> Participar
+              </Button>
+              {getEvent.data.is_owner && (
+                <>
+                  <EditEventForm event={getEvent.data} />
+                  <DeleteEventForm eventId={getEvent.data.id} />
+                </>
+              )}
+            </div>
           </div>
         </main>
       </>

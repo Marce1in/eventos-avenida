@@ -6,23 +6,29 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import api, { ApiError } from "@/lib/api"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Save } from "lucide-react"
-import { useForm } from "react-hook-form"
+import { useForm, UseFormReturn } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-import FullScreenLoading from "./fullScreenLoading"
 import { SyncLoader } from "react-spinners"
 import useAuth from "@/lib/loginContext"
+import { useEffect } from "react"
 
 const changeUserDataSchema = z
   .object({
     name: z.string().min(1, "O usuário precisa de um nome").max(64, "O nome não pode ser maior que 64 letras"),
     email: z.string().email("Email Inválido"),
-    passwd: z.string().min(4, "Senha deve ter mais que 4 letras").optional(),
-    passconf: z.string().min(1, "Confirme sua troca de senha").optional(),
+    passwd: z.literal("").or(z.string().min(4, "Senha deve ter mais que 4 letras")),
+    passconf: z.string(),
   })
-  .refine(({ passwd, passconf }) => passwd === passconf, {
+  .refine(({ passwd, passconf }) => {
+    if (passwd === "") {
+      return true
+    }
+
+    return passwd === passconf
+  }, {
     message: "Senhas não estão iguais",
     path: ["passconf"]
   })
@@ -39,20 +45,23 @@ interface getUserDataResponse {
 }
 
 function ChangeUserDataForm() {
-  const { userId } = useAuth()
+  const { userId, logout } = useAuth()
+  const queryClient = useQueryClient()
 
   const getUserData = useQuery<getUserDataResponse, ApiError>({
     queryKey: ["userData"],
-      queryFn: () => api.get(`user/${userId}`),
+    queryFn: () => api.get(`user/${userId}`),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   })
 
   const changeUserData = useMutation<changeUserDataResponse, ApiError, changeUserDataType>({
-    mutationFn: (data) => api.patch("user/changeData", data),
+    mutationFn: (data) => api.patch("user/edit-user-info", data),
     onSuccess: (data) => {
       toast.success(data.message)
+      queryClient.invalidateQueries({ queryKey: ["userData"] })
+      logout()
     },
     onError: (data) => {
       toast.error(data.message)
@@ -62,12 +71,23 @@ function ChangeUserDataForm() {
   const form = useForm<changeUserDataType>({
     resolver: zodResolver(changeUserDataSchema),
     defaultValues: {
-      name: getUserData.data?.name,
-      email: getUserData.data?.email,
+      name: "",
+      email: "",
       passwd: "",
       passconf: "",
     }
   })
+
+  useEffect(() => {
+    if (getUserData.data) {
+      form.reset({
+        name: getUserData.data.name,
+        email: getUserData.data.email,
+        passwd: "",
+        passconf: "",
+      });
+    }
+  }, [getUserData.data, form]);
 
   function onSubmit(values: changeUserDataType) {
     changeUserData.mutate(values)
@@ -128,7 +148,7 @@ function ChangeUserDataForm() {
             )}
           />
 
-          <FormField control={form.control} name="passwd"
+          <FormField control={form.control} name="passconf"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirmar nova senha</FormLabel>
@@ -141,8 +161,12 @@ function ChangeUserDataForm() {
 
           <div className="flex w-full justify-end pt-5">
             <Button type="submit" className="h-14">
-              <Save className="mr-1 h-4 w-4" />
-              Salvar Alterações
+              {changeUserData.isPending ?
+                <SyncLoader color="#ffffff" size={5} /> :
+                <>
+                  <Save className="mr-1 h-4 w-4" /> Salvar Alterações
+                </>
+              }
             </Button>
           </div>
 
@@ -153,5 +177,3 @@ function ChangeUserDataForm() {
 }
 
 export default ChangeUserDataForm
-
-

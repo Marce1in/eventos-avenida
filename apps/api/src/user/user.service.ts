@@ -6,14 +6,17 @@ import * as argon2 from 'argon2'
 import { generate } from 'otp-generator'
 import { MailService } from 'src/mail/mail.service';
 import { EditUserDto } from './dto/edit-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private readonly mailService: MailService,
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService,
     ) { }
 
     private readonly logger = new Logger(UserService.name)
@@ -102,6 +105,21 @@ export class UserService {
     }
 
     async findOne(id: string) {
+        const user = await this.prisma.user.findUnique({
+            omit: {
+                passwd: true
+            },
+            where: {
+                id: id
+            }
+        })
+        if (!user) {
+            throw new NotFoundException('Usuário não encontrado');
+        }
+        return user;
+    }
+
+    async findOneBy(id: string) {
         const user = await this.prisma.user.findUnique({
             omit: {
                 passwd: true
@@ -205,7 +223,26 @@ export class UserService {
             })
         }
         if (editUserDto.email != user.email) {
+            const mailUser = await this.prisma.user.findUnique({
+                where: {
+                    email: user.email
+                }
+            })
 
+            if (mailUser.id != user.id) {
+                throw new ConflictException('Este e-mail já está em uso')
+            }
+
+            const payload = {
+                sub: user.id,
+                email: editUserDto.email
+            }
+            const jwt = await this.jwtService.signAsync(payload)
+
+            await this.mailService.sendEmailChangeConfirmation({
+                mail: user.email,
+                otp: jwt
+            })
         }
         if (editUserDto.passwd) {
             const passwdHash = await argon2.hash(editUserDto.passwd, {
@@ -217,5 +254,30 @@ export class UserService {
                 data: { passwd: passwdHash }
             })
         }
+
+        return {
+            message: "Campos modificados com sucesso! Se modificou seu E-mail, por favor, confirme a mudança com o E-mail que enviamos"
+        }
     }
+
+    async verifyMailChange(token: string) {
+
+        try {
+            const { sub, email } = await this.jwtService.verifyAsync(
+                token,
+                {
+                    secret: this.configService.get<string>('SECRET_KEY')
+                })
+
+            await this.prisma.user.update({
+                where: { id: sub },
+                data: { email: email }
+            })
+        } catch (err) {
+            throw new BadRequestException(err)
+        }
+
+        return { "message": "E-mail substítuido com sucesso!" }
+    }
+
 }

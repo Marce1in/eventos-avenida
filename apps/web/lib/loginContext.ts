@@ -9,6 +9,7 @@ interface authI {
   sessionExpirationDate: number
   userName: string
   userId: string
+  isLoading: boolean
   login: (token: string) => void
   logout: () => void
   checkExpiration: () => void
@@ -27,6 +28,7 @@ const useAuth = create<authI>()(
     sessionExpirationDate: NaN,
     userName: "",
     userId: "",
+    isLoading: true,
 
     login: (token: string) => set((state) => {
       const claims = jwtSchema.safeParse(jose.decodeJwt(token))
@@ -60,7 +62,12 @@ const useAuth = create<authI>()(
   }),
     {
       name: "auth",
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.isLoading = false
+        }
+      }
     }))
 
 export default useAuth

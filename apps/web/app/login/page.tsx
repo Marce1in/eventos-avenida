@@ -89,7 +89,7 @@ function Login() {
             />
 
             <Button type="submit" className={`w-full ${loginUser.isError && "bg-red-500 hover:bg-red-600"}`}>
-              {loginUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Criar"}
+              {loginUser.isPending ? <SyncLoader color="#ffffff" size={5} /> : "Entrar"}
             </Button>
 
             {loginUser.isError && (

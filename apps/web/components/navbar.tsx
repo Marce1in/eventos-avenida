@@ -6,7 +6,7 @@ import useAuth from "@/lib/loginContext"
 
 function Navbar() {
   const router = useRouter()
-  const { logout } = useAuth()
+  const { logout, userName } = useAuth()
 
   return (
     <>
@@ -23,7 +23,7 @@ function Navbar() {
             <User color="#FFFFFF" size={30} />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel>Bem-vindo</DropdownMenuLabel>
+            <DropdownMenuLabel>Bem-vindo {userName}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push("/profile")}>Perfil</DropdownMenuItem>
             <DropdownMenuItem onClick={() => { logout(); router.push("/login") }}>Sair</DropdownMenuItem>

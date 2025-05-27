@@ -40,7 +40,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to: emailChangeConfDto.mail,
       subject: 'Confirmar mudança de E-mail',
-      template: './changePassReq',
+      template: './emailChangeVerification',
 
       context: {
         token: emailChangeConfDto.otp,
