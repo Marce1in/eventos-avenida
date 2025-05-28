@@ -4,9 +4,12 @@ import { Button } from "./ui/button"
 import { MapPin } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-function EventsCards({ events }: { events: EventI[]}) {
+interface pageProps {
+  events: EventI[]
+}
+
+function EventsCards({ events }: pageProps) {
   const router = useRouter()
-  console.log(events)
 
   if (events.length == 0) {
     return (
@@ -23,7 +26,7 @@ function EventsCards({ events }: { events: EventI[]}) {
           {event.name}
         </CardTitle>
         <CardDescription className="flex items-center gap-2">
-            <MapPin size={15}/>{event.location}
+          <MapPin size={15} />{event.location}
         </CardDescription>
       </CardHeader>
       <CardContent>

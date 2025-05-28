@@ -24,17 +24,27 @@ export class EventsService {
     return { message: "Evento criado com sucesso!" };
   }
 
-  async findAll(q?: string) {
-    return this.prisma.event.findMany({
-      where: q
-        ? {
-          name: {
-            contains: q,
-            mode: 'insensitive',
-          },
+  async findAll(currentUserId: string, q?: string) {
+    const events = await this.prisma.event.findMany({
+      where: q ? {
+        name: {
+          contains: q,
+          mode: 'insensitive'
         }
-        : undefined,
+      } : undefined,
+      include: {
+        EventUser: {
+          where: { userId: currentUserId },
+          select: { userId: true }
+        }
+      }
     });
+
+    return events.map(event => ({
+      ...event,
+      isOwner: event.userId === currentUserId,
+      isParticipant: event.EventUser.length > 0
+    }));
   }
 
   async findOne(id: string, userId: string) {

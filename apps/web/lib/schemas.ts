@@ -6,5 +6,7 @@ export interface EventI {
   location: string
   description: string
   userId: string
+  isParticipant: boolean
+  isOwner: boolean
   userEvent?: []
 }

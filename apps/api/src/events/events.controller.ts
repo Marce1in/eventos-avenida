@@ -15,8 +15,8 @@ export class EventsController {
   }
 
   @Get()
-  findAll(@Query('q') q?: string) {
-    return this.eventsService.findAll(q);
+  findAll(@Req() request: Request, @Query('q') q?: string) {
+    return this.eventsService.findAll(request["user"].sub ,q);
   }
 
   @Get(':id')

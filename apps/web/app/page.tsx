@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar";
 import SearchBar from "@/components/searchBar";
 import api, { ApiError } from "@/lib/api";
 import { useAuthGuard } from "@/lib/hooks";
+import { EventI } from "@/lib/schemas";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ function home() {
 
   const [query, setQuery] = useState("")
 
-  const getEvents = useQuery<Event[], ApiError>({
+  const getEvents = useQuery<EventI[], ApiError>({
     queryKey: ["events", query],
     queryFn: () => api.get(`events?q=${query}`)
   })
