@@ -9,10 +9,11 @@ import { Separator } from "@/components/ui/separator";
 import api, { ApiError } from "@/lib/api";
 import { useAuthGuard } from "@/lib/hooks";
 import { EventI } from "@/lib/schemas";
-import { useQuery } from "@tanstack/react-query";
-import { Calendar, Check, Clock, MapPin } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Calendar, Check, Clock, MapPin, PersonStandingIcon, X } from "lucide-react";
 import { use } from "react";
 import { SyncLoader } from "react-spinners";
+import { toast } from "sonner";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -20,16 +21,51 @@ interface PageProps {
 
 interface EventPageQueryI extends EventI {
   is_owner: boolean
+  is_assignee: string
+  total_participants: number
+}
+
+interface enterEventResponse {
+  message: string
 }
 
 function EventPage({ params }: PageProps) {
   const loading = useAuthGuard()
   const { id } = use(params)
+  const queryClient = useQueryClient()
 
   const getEvent = useQuery<EventPageQueryI, ApiError>({
     queryKey: ["event"],
     queryFn: () => api.get(`events/${id}`)
   })
+
+  const enterEvent = useMutation<enterEventResponse, ApiError, string>({
+    mutationFn: (eventId) => api.post(`events/assign/${eventId}`),
+    onSuccess: (data) => {
+      toast.success(data.message)
+      queryClient.invalidateQueries({
+        queryKey: ["event"]
+      })
+    }
+  })
+
+  const leaveEvent = useMutation<enterEventResponse, ApiError, string>({
+    mutationFn: (eventId) => api.delete(`events/assign/${eventId}`),
+    onSuccess: (data) => {
+      toast.success(data.message)
+      queryClient.invalidateQueries({
+        queryKey: ["event"]
+      })
+    }
+  })
+
+  function assignUser(eventId: string) {
+    enterEvent.mutate(eventId)
+  }
+
+  function unassignUser(eventId: string) {
+    leaveEvent.mutate(eventId)
+  }
 
   if (getEvent.isLoading || loading)
     return (
@@ -78,14 +114,40 @@ function EventPage({ params }: PageProps) {
                     <Clock className="mr-3 h-5 w-5 text-slate-500" />
                     <span>{getEvent.data.time.slice(0, 5)}</span>
                   </li>
+                  <li className="flex items-center text-slate-700">
+                    <PersonStandingIcon className="mr-3 h-5 w-5 text-slate-500" />
+                    <span>{getEvent.data.total_participants}</span>
+                  </li>
                 </ul>
               </CardContent>
             </Card>
 
             <div className="flex space-x-4 mt-6">
-              <Button variant="outline" className="flex items-center w-32">
-                <Check className="mr-2 h-4 w-4" /> Participar
-              </Button>
+              {getEvent.data.is_assignee ?
+                <Button
+                  variant="destructive"
+                  className="flex items-center w-20"
+                  onClick={() => unassignUser(id)}>
+                  {leaveEvent.isPending ?
+                    <SyncLoader color="#ffffff" size={5} /> :
+                    <>
+                      <X className="mr-2 h-4 w-4" /> Sair
+                    </>
+                  }
+                </Button>
+                :
+                <Button
+                  variant="outline"
+                  className="flex items-center w-32"
+                  onClick={() => assignUser(id)}>
+                  {enterEvent.isPending ?
+                    <SyncLoader size={5} /> :
+                    <>
+                      <Check className="mr-2 h-4 w-4" /> Participar
+                    </>
+                  }
+                </Button>
+              }
               {getEvent.data.is_owner && (
                 <>
                   <EditEventForm event={getEvent.data} />

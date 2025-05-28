@@ -6,4 +6,5 @@ export interface EventI {
   location: string
   description: string
   userId: string
+  userEvent?: []
 }

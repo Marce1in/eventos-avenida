@@ -40,15 +40,33 @@ export class EventsService {
   async findOne(id: string, userId: string) {
     const event = await this.prisma.event.findUnique({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        date: true,
+        time: true,
+        location: true,
+        description: true,
+        userId: true,
+        EventUser: {
+          where: { userId },
+          select: { userId: true }
+        },
+        _count: {
+          select: { EventUser: true }
+        }
+      }
     });
 
     if (!event) {
       throw new NotFoundException('Evento não encontrado');
-    };
+    }
 
     return {
       ...event,
       is_owner: event.userId === userId,
+      is_assignee: event.EventUser.length > 0,
+      total_participants: event._count.EventUser
     };
   }
 
@@ -88,5 +106,32 @@ export class EventsService {
     return this.prisma.event.delete({
       where: { id },
     });
+  }
+
+  async assign(eventId: string, userId: string) {
+    await this.prisma.eventUser.create({
+      data: {
+        eventId: eventId,
+        userId: userId
+      }
+    })
+
+    return {
+      message: "Você agora está participando desse evento!"
+    }
+  }
+
+  async unassign(eventId: string, userId: any) {
+    await this.prisma.eventUser.delete({
+      where: {
+        userId_eventId: {
+          userId, eventId
+        }
+      }
+    })
+
+    return {
+      message: "Você saiu do evento :("
+    }
   }
 }

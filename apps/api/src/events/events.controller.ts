@@ -33,4 +33,14 @@ export class EventsController {
   remove(@Param('id') id: string, @Req() request: Request) {
     return this.eventsService.remove(String(id), request["user"].sub);
   }
+
+  @Post('assign/:id')
+  assign(@Param('id') id: string, @Req() request: Request) {
+    return this.eventsService.assign(id, request["user"].sub)
+  }
+
+  @Delete('assign/:id')
+  unassign(@Param('id') id: string, @Req() request: Request) {
+    return this.eventsService.unassign(id, request["user"].sub)
+  }
 }
