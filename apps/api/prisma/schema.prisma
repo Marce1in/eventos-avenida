@@ -18,6 +18,7 @@ model User {
   email  String @unique @db.VarChar(255)
   name   String @db.VarChar(64)
   passwd String @db.VarChar(128)
+  isAdmin Boolean @default(false)
 
   EventUser EventUser[]
 }
