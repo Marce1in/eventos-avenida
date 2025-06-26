@@ -134,6 +134,20 @@ export class UserService {
         return user;
     }
 
+    async findAdmins() {
+        const admins = await this.prisma.user.findMany({
+            where: { isAdmin: true },
+            omit: {
+                passwd: true
+            }
+        })
+        if (!admins || admins.length === 0) {
+            throw new NotFoundException('Nenhum administrador encontrado');
+        }
+        return admins;
+    }
+    
+
     async changePassReq(email: string) {
         const user = await this.prisma.user.findUnique({
             where: { email: email }
@@ -260,6 +274,7 @@ export class UserService {
         }
     }
 
+    
     async verifyMailChange(token: string) {
 
         try {
@@ -278,6 +293,30 @@ export class UserService {
         }
 
         return { "message": "E-mail substítuido com sucesso!" }
+    }
+
+    async turnAdmin(id: string) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: id },
+            omit: {
+                passwd: true
+            }
+        })
+
+        if (!user) {
+            throw new NotFoundException('Usuário não encontrado')
+        }
+
+        if (user.isAdmin) {
+            throw new BadRequestException('Este usuário já é um administrador')
+        }
+
+        await this.prisma.user.update({
+            where: { id: id },
+            data: { isAdmin: true }
+        })
+
+        return { message: 'Usuário promovido a administrador com sucesso!' }
     }
 
 }
