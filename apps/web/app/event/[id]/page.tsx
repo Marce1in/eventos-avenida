@@ -14,9 +14,15 @@ import { Calendar, Check, Clock, MapPin, PersonStandingIcon, X } from "lucide-re
 import { use } from "react";
 import { SyncLoader } from "react-spinners";
 import { toast } from "sonner";
+import  ParticipantList  from "@/components/participantList"
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+interface Participant {
+  id: string;
+  name: string;
 }
 
 interface EventPageQueryI extends EventI {
@@ -24,6 +30,7 @@ interface EventPageQueryI extends EventI {
   is_owner: boolean
   is_assignee: string
   total_participants: number
+  participants?: Participant[]
 }
 
 interface enterEventResponse {
@@ -156,6 +163,9 @@ function EventPage({ params }: PageProps) {
                 </>
               )}
             </div>
+            {getEvent.data.is_admin && getEvent.data.participants && (
+              <ParticipantList participants={getEvent.data.participants} eventId={id}  />
+            )}
           </div>
         </main>
       </>

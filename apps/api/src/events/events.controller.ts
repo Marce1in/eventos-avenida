@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query, ForbiddenException } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -30,8 +30,26 @@ export class EventsController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string, @Req() request: Request) {
-    return this.eventsService.remove(String(id), request["user"].sub);
+  return this.eventsService.remove(
+    String(id), 
+    request["user"].sub, 
+    request["user"].isAdmin
+  );
+}
+  @Delete(':eventId/participants/:userId')
+  async removeParticipant(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+    @Req() req,
+  ) {
+
+    if (!req.user.isAdmin) {
+      throw new ForbiddenException('Apenas administradores podem remover participantes.');
+    }
+
+    return this.eventsService.removeParticipant(eventId, userId);
   }
 
   @Post('assign/:id')

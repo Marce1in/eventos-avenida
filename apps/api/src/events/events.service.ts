@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EventsService {
@@ -48,49 +49,96 @@ export class EventsService {
   }
 
   async findOne(id: string, userId: string) {
-  const [event, user] = await Promise.all([
-    this.prisma.event.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        name: true,
-        date: true,
-        time: true,
-        location: true,
-        description: true,
-        userId: true,
-        EventUser: {
-          where: { userId }, 
-          select: { userId: true }
-        },
-        _count: {
-          select: { EventUser: true } 
-        }
-      }
-    }),
-    
-    this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { isAdmin: true }
-    })
-  ]);
+      select: { isAdmin: true },
+    });
 
+    const isAdmin = user?.isAdmin || false;
 
-  if (!event) {
+    const eventSelectOptions = {
+      id: true,
+      name: true,
+      date: true,
+      time: true,
+      location: true,
+      description: true,
+      userId: true,
+      _count: {
+        select: { EventUser: true },
+      },
+      EventUser: isAdmin
+        ? {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          }
+        : {
+            where: { userId },
+            select: { userId: true },
+          },
+    };
 
-    return null; 
+    const event = await this.prisma.event.findUnique({
+      where: { id },
+      select: eventSelectOptions,
+    });
+
+    if (!event) {
+      return null;
+    }
+
+    let participants: { id: string; name: string }[] | undefined = undefined;
+    let is_assignee = false;
+
+    if (isAdmin) {
+      const eventUsers = event.EventUser as { user: { id: string; name: string } }[];
+      participants = eventUsers.map((eventUser) => eventUser.user);
+    } else {
+      const eventUsers = event.EventUser as { userId: string }[];
+      is_assignee = eventUsers.length > 0;
+    }
+
+    return {
+      id: event.id,
+      name: event.name,
+      date: event.date,
+      time: event.time,
+      location: event.location,
+      description: event.description,
+      is_owner: event.userId === userId,
+      total_participants: event._count.EventUser,
+      is_admin: isAdmin,
+      participants,
+      is_assignee,
+    };
   }
 
-  return {
-    ...event,
-    is_owner: event.userId === userId,
-    is_assignee: event.EventUser.length > 0,
-    total_participants: event._count.EventUser,
-    is_admin: user?.isAdmin || false,
-    EventUser: undefined,
-    _count: undefined,
-  };
-}
+  async removeParticipant(eventId: string, userIdToRemove: string) {
+    try {
+      await this.prisma.eventUser.delete({
+        where: {
+          // A correção está aqui, usando o nome da chave composta
+          // que o seu próprio schema Prisma gerou.
+          userId_eventId: {
+            userId: userIdToRemove,
+            eventId: eventId,
+          },
+        },
+      });
+      return { message: 'Participante removido com sucesso.' };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new NotFoundException('Inscrição não encontrada. O usuário pode já ter sido removido.');
+      }
+      throw error;
+    }
+  }
 
   async update(id: string, updateEventDto: UpdateEventDto, userId: string) {
     const event = await this.prisma.event.findUnique({
@@ -111,8 +159,7 @@ export class EventsService {
     });
   }
 
-
-  async remove(id: string, userId: string) {
+  async remove(id: string, userId: string, isAdmin: boolean) {
     const event = await this.prisma.event.findUnique({
       where: { id },
     });
@@ -121,7 +168,7 @@ export class EventsService {
       throw new NotFoundException('Evento não encontrado');
     }
 
-    if (event.userId !== userId) {
+    if (event.userId !== userId && !isAdmin) {
       throw new ForbiddenException('Você não tem permissão para excluir este evento');
     }
 
@@ -136,12 +183,14 @@ export class EventsService {
         eventId: eventId,
         userId: userId
       }
-    })
+    });
 
     return {
       message: "Você agora está participando desse evento!"
-    }
+    };
   }
+
+  
 
   async unassign(eventId: string, userId: any) {
     await this.prisma.eventUser.delete({
@@ -150,10 +199,10 @@ export class EventsService {
           userId, eventId
         }
       }
-    })
+    });
 
     return {
       message: "Você saiu do evento :("
-    }
+    };
   }
 }

@@ -21,7 +21,7 @@ export class AuthService {
       throw new NotFoundException('E-mail ou senha incorretos')
     }
 
-    const payload = { sub: user.id, username: user.name }
+    const payload = { sub: user.id, username: user.name, isAdmin: user.isAdmin }
 
     return {
       message: "Usuário logado com sucesso!",
