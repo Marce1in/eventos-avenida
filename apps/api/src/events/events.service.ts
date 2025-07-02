@@ -48,7 +48,8 @@ export class EventsService {
   }
 
   async findOne(id: string, userId: string) {
-    const event = await this.prisma.event.findUnique({
+  const [event, user] = await Promise.all([
+    this.prisma.event.findUnique({
       where: { id },
       select: {
         id: true,
@@ -59,26 +60,37 @@ export class EventsService {
         description: true,
         userId: true,
         EventUser: {
-          where: { userId },
+          where: { userId }, 
           select: { userId: true }
         },
         _count: {
-          select: { EventUser: true }
+          select: { EventUser: true } 
         }
       }
-    });
+    }),
+    
+    this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { isAdmin: true }
+    })
+  ]);
 
-    if (!event) {
-      throw new NotFoundException('Evento não encontrado');
-    }
 
-    return {
-      ...event,
-      is_owner: event.userId === userId,
-      is_assignee: event.EventUser.length > 0,
-      total_participants: event._count.EventUser
-    };
+  if (!event) {
+
+    return null; 
   }
+
+  return {
+    ...event,
+    is_owner: event.userId === userId,
+    is_assignee: event.EventUser.length > 0,
+    total_participants: event._count.EventUser,
+    is_admin: user?.isAdmin || false,
+    EventUser: undefined,
+    _count: undefined,
+  };
+}
 
   async update(id: string, updateEventDto: UpdateEventDto, userId: string) {
     const event = await this.prisma.event.findUnique({

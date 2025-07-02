@@ -20,6 +20,7 @@ interface PageProps {
 }
 
 interface EventPageQueryI extends EventI {
+  is_admin: boolean
   is_owner: boolean
   is_assignee: string
   total_participants: number
@@ -148,7 +149,7 @@ function EventPage({ params }: PageProps) {
                   }
                 </Button>
               }
-              {getEvent.data.is_owner && (
+              {(getEvent.data.is_owner || getEvent.data.is_admin)  && (
                 <>
                   <EditEventForm event={getEvent.data} />
                   <DeleteEventForm eventId={getEvent.data.id} />
