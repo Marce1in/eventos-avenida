@@ -28,6 +28,15 @@ export class EventsController {
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto, @Req() request: Request) {
     return this.eventsService.update(String(id), updateEventDto, request["user"].sub);
   }
+  
+  @UseGuards(AuthGuard)
+  @Get(':id/stats')
+  async getEventStats(@Param('id') eventId: string, @Req() req) {
+    if (!req.user.isAdmin) {
+      throw new ForbiddenException('Apenas administradores podem ver as estatísticas.');
+    }
+    return this.eventsService.getEventStats(eventId);
+  }
 
   @Delete(':id')
   @UseGuards(AuthGuard)

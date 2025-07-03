@@ -15,7 +15,7 @@ import { use } from "react";
 import { SyncLoader } from "react-spinners";
 import { toast } from "sonner";
 import  ParticipantList  from "@/components/participantList"
-
+import { EventStatsChart } from '@/components/EventStatsChart';
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -166,6 +166,7 @@ function EventPage({ params }: PageProps) {
             {getEvent.data.is_admin && getEvent.data.participants && (
               <ParticipantList participants={getEvent.data.participants} eventId={id}  />
             )}
+            {getEvent.data.is_admin && <EventStatsChart eventId={id} />}
           </div>
         </main>
       </>

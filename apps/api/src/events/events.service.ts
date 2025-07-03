@@ -159,6 +159,20 @@ export class EventsService {
     });
   }
 
+  async getEventStats(eventId: string) {
+    const [totalUsers, eventParticipants] = await Promise.all([
+      this.prisma.user.count(),
+      this.prisma.eventUser.count({
+        where: { eventId: eventId },
+      }),
+    ]);
+
+    return {
+      totalUsers,
+      eventParticipants,
+    };
+  }
+
   async remove(id: string, userId: string, isAdmin: boolean) {
     const event = await this.prisma.event.findUnique({
       where: { id },
